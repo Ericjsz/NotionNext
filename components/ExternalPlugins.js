@@ -1,5 +1,6 @@
 import { siteConfig } from '@/lib/config'
 import dynamic from 'next/dynamic'
+import LA51 from './LA51'
 import WebWhiz from './Webwhiz'
 
 const TwikooCommentCounter = dynamic(() => import('@/components/TwikooCommentCounter'), { ssr: false })
@@ -22,6 +23,8 @@ const VConsole = dynamic(() => import('@/components/VConsole'), { ssr: false })
 const CustomContextMenu = dynamic(() => import('@/components/CustomContextMenu'), { ssr: false })
 const DisableCopy = dynamic(() => import('@/components/DisableCopy'), { ssr: false })
 const AdBlockDetect = dynamic(() => import('@/components/AdBlockDetect'), { ssr: false })
+const LoadingProgress = dynamic(() => import('@/components/LoadingProgress'), { ssr: false })
+const AosAnimation = dynamic(() => import('@/components/AOSAnimation'), { ssr: false })
 
 /**
  * 各种插件脚本
@@ -64,6 +67,8 @@ const ExternalPlugin = (props) => {
   const ANALYTICS_GOOGLE_ID = siteConfig('ANALYTICS_GOOGLE_ID')
   const MATOMO_HOST_URL = siteConfig('MATOMO_HOST_URL')
   const MATOMO_SITE_ID = siteConfig('MATOMO_SITE_ID')
+  const ANALYTICS_51LA_ID = siteConfig('ANALYTICS_51LA_ID')
+  const ANALYTICS_51LA_CK = siteConfig('ANALYTICS_51LA_CK')
 
   if (DISABLE_PLUGIN) {
     return null
@@ -91,6 +96,18 @@ const ExternalPlugin = (props) => {
         {WEB_WHIZ_ENABLED && <WebWhiz />}
         {AD_WWADS_BLOCK_DETECT && <AdBlockDetect />}
         <VConsole />
+        <LoadingProgress />
+        <AosAnimation />
+        {ANALYTICS_51LA_ID && ANALYTICS_51LA_CK && <LA51/>}
+
+        {ANALYTICS_51LA_ID && ANALYTICS_51LA_CK && (<>
+            <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js" defer/>
+            {/* <script async dangerouslySetInnerHTML={{
+              __html: `
+                    LA.init({id:"${ANALYTICS_51LA_ID}",ck:"${ANALYTICS_51LA_CK}",hashMode:true,autoTrack:true})
+                    `
+            }} /> */}
+        </>)}
 
         {CHATBASE_ID && (<>
             <script id={CHATBASE_ID} src="https://www.chatbase.co/embed.min.js" defer />
